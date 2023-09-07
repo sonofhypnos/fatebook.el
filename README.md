@@ -1,12 +1,9 @@
 # fatebook.el
 
+
 ## Installation 
 
-### Doom Emacs
-
-For users of [Doom Emacs](https://github.com/hlissner/doom-emacs):
-
-1. Add the package to your `packages.el`. Open it and add the following:
+[Doom Emacs](https://github.com/hlissner/doom-emacs):
 
 ```elisp
 (package! fatebook
@@ -14,17 +11,8 @@ For users of [Doom Emacs](https://github.com/hlissner/doom-emacs):
            :repo "sonofhypnos/fatebook.el"))
 ```
 
-2. Run the `doom sync` command to update your package set.
 
-3. After restarting Emacs or running `M-x doom/reload`, the package will be available for use.
-
-### Spacemacs
-
-For [Spacemacs](http://spacemacs.org) users:
-
-1. Open your `.spacemacs` or `.spacemacs.d/init.el` and navigate to the `dotspacemacs-additional-packages` list.
-
-2. Add the package with its repository details:
+[Spacemacs](http://spacemacs.org) users:
 
 ```elisp
 (fatebook :location (recipe
@@ -32,9 +20,14 @@ For [Spacemacs](http://spacemacs.org) users:
                      :repo "sonofhypnos/fatebook.el"))
 ```
 
-3. Reload the configuration (`SPC f e R` or `M-m f e R`).
+[straight.el](https://github.com/raxod502/straight.el)
 
-### Manual Installation
+``` emacs-lisp
+(straight-use-package
+ '(fatebook :type git :host github :repo "sonofhypnos/fatebook.el"))
+```
+
+## Manual Installation
 
 1. Clone the repository:
 
@@ -91,4 +84,6 @@ machine fatebook.io login defaultUser password $your-api-key
 
 replace $your-api-key with your api key and leave the remaining fields the same.
 
+## Configuration
 
+By default, fatebook.el uses org-read-date to pick a date. If you don't want to load the whole of org for this package, set `fatebook-use-org-read-date` to nil in your config or in the customization interface.
