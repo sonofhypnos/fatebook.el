@@ -60,11 +60,15 @@ open `~/.authinfo.gpg` with emacs:
 emacs ~/.authinfo.gpg
 ```
 
-(or (not recommended) `~/.authinfo` if you want to store your secrets unencrypted). Replace $your-api-key with your api key and leave the remaining fields the same.
+Emacs will prompt you for a password to encrypt the file (you can also use `~/.authinfo` if you don't want to encrypt your secrets (not recommended!)).
+
+Add this line to the file:
+
 ``` sh
 machine fatebook.io login defaultUser password $your-api-key
 ```
 
+Replace $your-api-key with your api key found under https://fatebook.io/api-setup and leave the remaining fields the same.
 
 ### Long version
 
