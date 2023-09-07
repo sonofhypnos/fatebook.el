@@ -60,11 +60,17 @@ machine fatebook.io login defaultUser password $your-api-key
 For the longer explanation see this section I stole from [(ghub)Getting Started](https://magit.vc/manual/ghub/Storing-a-Token.html):
 
 > Please also see [(auth)Top](https://www.gnu.org/software/emacs/manual/html_node/auth/index.html#Top) for all the gory details about Auth-Source.
+
 > The variable auth-sources controls how and where Auth-Source keeps its secrets. The default value is a list of three files: ("~/.authinfo" "~/.authinfo.gpg" "~/.netrc"), but to avoid confusion you should make sure that only one of these files exists and then you should also adjust the value of the variable to only ever use that file, for example:
+
 > (setq auth-sources '("~/.authinfo"))
+
 > In ~/.authinfo secrets are stored in plain text. If you don’t want that, then you should use the encrypted ~/.authinfo.gpg instead:
+
 > (setq auth-sources '("~/.authinfo.gpg"))
+
 > Auth-Source also supports storing secrets in various external key-chains. See [(auth)Top](https://www.gnu.org/software/emacs/manual/html_node/auth/index.html#Top) for more information. 
+
 > The default Auth-Source backends only support storing three values per entry; the "machine", the "login" and the "password".
 
 If you want fatebook.el to be able to find your api key use `fatebook.io` for machine and `defaultUser` for user.
