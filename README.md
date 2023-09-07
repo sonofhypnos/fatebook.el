@@ -53,7 +53,8 @@ Replace `"/path/to/fatebook.el"` with the actual path to the directory.
 ## Storing your api-keys
 
 
-TLDR: open `~/.authinfo.gpg` with emacs:
+### TLDR: 
+open `~/.authinfo.gpg` with emacs:
 
 ``` sh
 emacs ~/.authinfo.gpg
@@ -64,6 +65,8 @@ emacs ~/.authinfo.gpg
 machine fatebook.io login defaultUser password $your-api-key
 ```
 
+
+### Long version
 
 
 For the longer explanation see this section I stole from [(ghub)Getting Started](https://magit.vc/manual/ghub/Storing-a-Token.html):
