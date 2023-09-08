@@ -1,30 +1,50 @@
 # fatebook.el
 
+- [ ] create gif
+- [ ] write short intro what package does
+- [ ] list dependencies before install
 
 ## Installation 
 
-[Doom Emacs](https://github.com/hlissner/doom-emacs):
+- With `use-package` and `straight.el`:
+``` emacs-lisp
+(use-package fatebook
+  :straight (fatebook :repo "sonofhypnos/fatebook.el" :host github
+                      :files ("fatebook.el"))
+  :commands fatebook-create-question)
+```
+
+- Manual installation: copy `fatebook.el` to your load-path, then
+
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/sonofhypnos/fatebook.el.git
+```
+
+2. Add the directory to your `load-path`. In your `.emacs` or `init.el`, add:
 
 ```elisp
+(add-to-list 'load-path "/path/to/fatebook.el")
+```
+
+Replace `"/path/to/fatebook.el"` with the actual path to the directory.
+
+3. Load the package:
+
+```elisp
+(require 'fatebook)
+`
+
+
+[Doom Emacs](https://github.com/hlissner/doom-emacs):
+
+Put this into packages.el
+``` emacs-lisp
 (package! fatebook
   :recipe (:host github
            :repo "sonofhypnos/fatebook.el"))
-```
-
-
-[Spacemacs](http://spacemacs.org) users:
-
-```elisp
-(fatebook :location (recipe
-                     :fetcher github
-                     :repo "sonofhypnos/fatebook.el"))
-```
-
-[straight.el](https://github.com/raxod502/straight.el)
-
-``` emacs-lisp
-(straight-use-package
- '(fatebook :type git :host github :repo "sonofhypnos/fatebook.el"))
 ```
 
 ## Manual Installation
