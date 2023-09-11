@@ -115,7 +115,7 @@ Optional arguments TITLE, RESOLVEBY, and FORECAST can be provided."
 
   (let ((secret (plist-get (car credentials) :secret)))
     (unless secret
-      (error "You must configure an API key. See https://github.com/sonofhypnos/fatebook.el#user-content-storing-your-api-keys"))
+      (error "You need to configure an API key for fatebook. See https://github.com/sonofhypnos/fatebook.el#user-content-storing-your-api-keys"))
     secret)))
 
 
@@ -132,21 +132,17 @@ TITLE, RESOLVEBY, and FORECAST are required."
               ("forecast" . ,(number-to-string forecast)))
     :success (lambda (&rest response)
                (let ((data (plist-get response :data)))
-                 (message "Question created successfully! Visit your question under %S" data)
-                 'success))
-    :error (lambda (&rest response)
+                 (message "Question created successfully! Visit your question under %S" data)))
+    :error (lambda  (&rest response)
              (let ((error-thrown (plist-get response :error-thrown)))
-               (if (and (eq (car error-thrown) 'error)
-                        (string-equal (cadr error-thrown) "http")
-                        (equal (caddr error-thrown) 401))
-                   ;; Inform user about problem:
-                   (message "Authorization on fatebook.io failed.\nPlease add or update your API key in the file you saved it in.\nIf you've already done this, refresh the cache using: auth-source-forget-all-cached.
-For further information see: https://github.com/new#user-content-storing-your-api-keys")
-                 (progn
-                   (message "Unexpected Error from fatebook: %S" error-thrown)
-                   (if fatebook-debug
-                       (message "More information from fatebook.io: %S" (plist-get response :data)))))
-               nil))))
+               (message "error-thrown value:%s" error-thrown)
+               (when error-thrown
+                 (if (and (string-equal (car (cdr error-thrown)) "http")
+                          (equal (car (cdr (cdr error-thrown))) 401))
+                     (message "Authorization on fatebook.io failed. Please add or update your API key in the file you saved it in. If you've already done this, refresh the cache using: auth-source-forget-all-cached. For further information see: https://github.com/new#user-content-storing-your-api-keys")
+                   (message "Unexpected Error from fatebook: %S" error-thrown))
+                 (when fatebook-debug
+                   (message "More information from fatebook.io: %S" (plist-get response :data))))))))
 
 
 (provide 'fatebook)
