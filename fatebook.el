@@ -1,4 +1,4 @@
-;;; fatebook.el --- dkdkd -*- lexical-binding: t; -*-
+;;; fatebook.el --- Create predictions on Fatebook  -*- lexical-binding: t; 
 ;;
 ;; Copyright (C) 2023 Tassilo Neubauer
 ;;
@@ -26,6 +26,10 @@
 ;;; Commentary:
 ;;; TODO: add automated tests
 ;;; TODO: figure out which version of 'request' we need.'
+;;; TODO: Make fatebook fail more graciously when the user enters an invalid
+;;; dates or predictions by asking for a new input.
+;;; TODO: We could add more friendly error messages if api-call fails with http 500 and others.
+;;; TODO: In principle would be nice to have a datepicker that doesn't depend on org.
 ;;;
 ;;; Code:
 
@@ -75,7 +79,7 @@ Options are ``'netrc`` or ``'secrets``."
 
 (defun fatebook--valid-date-p (date)
   "Check if DATE has the format 'YYYY-MM-DD'.
-Doesn't exclude all invalid dates."
+Doesn't exclude all invalid dates. Just here for typos."
   (string-match-p "\\`[0-9]\\{4\\}-[0-1][0-9]-[0-3][0-9]\\'" date))
 
 (defun fatebook-create-question (&optional title resolveBy forecast)
@@ -100,7 +104,13 @@ Optional arguments TITLE, RESOLVEBY, and FORECAST can be provided."
 (let ((credentials (let ((auth-source-creation-prompts '((secret . "Enter API key for %h: "))))
   (auth-source-search :host "fatebook.io"
                       :user "defaultUser"
-                      ;; :type fatebook-auth-source-backend
+                      :type fatebook-auth-source-backend
+                      ;;:create ;NOTE: auth-source does not support deletion. A
+                      ;;convoluted idea that could work is that we
+                      ;;just add more and more api keys, and we version them
+                      ;;with the :user handle and then just try all of them if
+                      ;;none worka. Could lead to complaints from fatebook
+                      ;;though.
                       :max 1))))
 
   (let ((secret (plist-get (car credentials) :secret)))
