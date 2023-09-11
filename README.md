@@ -1,15 +1,15 @@
 # fatebook.el
 
-Fatebook.el is an Emacs plugin to create questions on Fatebook
+fatebook.el is an Emacs plugin to create questions on Fatebook. Usage:
 
 ![](assets/demo.gif)
 
 ## Installation 
 ### Dependencies
 
-Fatebook uses the `request` package. If you don't have it already installed, install it through the instructions found [here](https://github.com/tkf/emacs-request). However, if you're using `package.el` or something similar, this might not be necessary.
+Fatebook requires the `request` package. If you don't have it already installed, install it through the instructions found [here](https://github.com/tkf/emacs-request).
 
-### Installation
+### Installing fatebook.el
 
 - With `use-package` and `straight.el`:
 ``` emacs-lisp
@@ -91,15 +91,11 @@ For the longer explanation see this section I stole from [(ghub)Getting Started]
 
 If you want fatebook.el to be able to find your api key use `fatebook.io` for machine and `defaultUser` for user.
 
-
-
-
-``` sh
-machine fatebook.io login defaultUser password $your-api-key
-```
-
-replace $your-api-key with your api key and leave the remaining fields the same.
-
 ## Configuration
 
-By default, fatebook.el uses org-read-date to pick a date. If you don't want to load the whole of org for this package, set `fatebook-use-org-read-date` to nil in your config or in the customization interface.
+By default, fatebook.el uses `org-read-date` to pick a date. If you don't want to load the whole of org for this package, set `fatebook-use-org-read-date` to nil in your config or in the customization interface.
+
+## Reporting Bugs
+
+If you are having problems make sure you have followed all the steps listed above. If you still have problems run `fatebook-create-question` with `fatebook-debug` set to `t` and include the debug message from the `echo-area` in your bug report.
+
