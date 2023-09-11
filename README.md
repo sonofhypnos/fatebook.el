@@ -19,6 +19,16 @@ Fatebook requires the `request` package. If you don't have it already installed,
   :commands fatebook-create-question)
 ```
 
+
+- [Doom Emacs](https://github.com/hlissner/doom-emacs):
+
+Put this into packages.el
+``` emacs-lisp
+(package! fatebook
+  :recipe (:host github
+           :repo "sonofhypnos/fatebook.el"))
+```
+
 - Manual installation: copy `fatebook.el` to your load-path and then run `(require 'fatebook)`. For example:
 
 1. Clone the repository:
@@ -39,16 +49,8 @@ Replace `"/path/to/fatebook.el"` with the actual path to the directory.
 
 ```elisp
 (require 'fatebook)
-`
-
-[Doom Emacs](https://github.com/hlissner/doom-emacs):
-
-Put this into packages.el
-``` emacs-lisp
-(package! fatebook
-  :recipe (:host github
-           :repo "sonofhypnos/fatebook.el"))
 ```
+
 
 ## Storing your api-keys
 
