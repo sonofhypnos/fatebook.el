@@ -6,7 +6,7 @@
 ;; Maintainer: Tassilo Neubauer <tassilo.neubauer@gmail.com>
 ;; Created: September 07, 2023
 ;; Modified: September 11, 2023
-;; Version: 0.1.3
+;; Version: 0.2.1
 ;; Keywords: calendar comm convenience
 ;; Homepage: https://github.com/tassilo/fatebook
 ;; Package-Requires: ((emacs "25.1") (org "4.67"))
@@ -63,7 +63,7 @@ Options are ``'netrc`` or ``'secrets``."
 (defun fatebook--pick-date ()
   "Open calendar and return the date selected by the user in 'YYYY-MM-DD' format."
   (if fatebook-use-org-read-date (progn (require 'org)
-                                         (org-read-date))
+                                         (org-read-date nil nil nil "Resolve by:"))
         ;FIXME: a simple datepicker that doesn't require org would be nice, but
         ;this turned out more complicated than expected.
         ;I tried writing my own minor mode with it's own keymap, but this
@@ -88,7 +88,7 @@ Optional arguments TITLE, RESOLVEBY, and FORECAST can be provided."
   (let* ((title (or title (read-string "Question title: ")))
          (resolveBy (or resolveBy (fatebook--pick-date)))
          (forecast (or forecast
-                       (/ (read-number "Forecast 0-100 (%): ") 100))))
+                       (/ (read-number "Make a prediction 0-100 (%): ") 100))))
 
     (unless (fatebook--valid-date-p resolveBy)
       (error "Invalid date format for 'resolveBy'. Expected format: YYYY-MM-DD"))
