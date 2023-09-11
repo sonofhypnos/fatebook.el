@@ -24,6 +24,8 @@
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
+;;; TODO: add automated tests
+;;; TODO: figure out which version of 'request' we need.'
 ;;;
 ;;; Code:
 
@@ -32,6 +34,7 @@
 
 (require 'calendar)
 (require 'auth-source)
+(require 'request)
 
 
 (defcustom fatebook-api-key-function nil
@@ -87,28 +90,32 @@ Optional arguments TITLE, RESOLVEBY, and FORECAST can be provided."
       (error "Forecast value must be between 0 and 100. For 40%% write 40"))
     (fatebook--api-call title resolveBy forecast)))
 
-(defun fatebook--api-key ()
+(defun fatebook--api-key-fn ()
   "Retrieve the Fatebook API key. If not present, prompt the user and save it."
 (let ((credentials (let ((auth-source-creation-prompts '((secret . "Enter API key for %h: "))))
   (auth-source-search :host "fatebook.io"
                       :user "defaultUser"
-                      :type fatebook-auth-source-backend
+                      ;; :type fatebook-auth-source-backend
                       :max 1))))
 
-      (plist-get (car credentials) :secret)))
+  (let ((secret (plist-get (car credentials) :secret)))
+    (unless secret
+      (error "You must configure an API key. See https://github.com/new#user-content-storing-your-api-keys"))
+    secret)))
+
 
 (defun fatebook--api-call (title resolveBy forecast)
   "API call to fatebook.
 TITLE, RESOLVEBY, and FORECAST are required."
-  (require 'request)   ;took 0.1 seconds to load on my machine, so I put it here
-                                        ;instead of at the start of the file,
-                                        ;because the api call is slow anyways.
   (request
     "https://fatebook.io/api/v0/createQuestion"
-    :params `(("apiKey" . ,(fatebook--api-key))
-              ("title" . ,title)
-              ("resolveBy" . ,resolveBy)
-              ("forecast" . ,(number-to-string forecast)))
+    :params `(("apiKey" . ,(if fatebook-api-key-function
+                               (fatebook-api-key-function)
+                             (funcall (fatebook--api-key-fn))))
+
+              ("title" . "test")
+              ("resolveBy" . "2050-01-01")
+              ("forecast" . 0.5))
     :success (lambda (&rest response)
                (let ((data (plist-get response :data)))
                  (message "Question created successfully! Visit your question under %S" data)))
