@@ -1,10 +1,15 @@
 # fatebook.el
 
-- [ ] create gif
-- [ ] write short intro what package does
-- [ ] list dependencies before install
+Fatebook.el is an Emacs plugin to create questions on Fatebook
+
+![](assets/demo.gif)
 
 ## Installation 
+### Dependencies
+
+Fatebook uses the `request` package. If you don't have it already installed, install it through the instructions found [here](https://github.com/tkf/emacs-request). However, if you're using `package.el` or something similar, this might not be necessary.
+
+### Installation
 
 - With `use-package` and `straight.el`:
 ``` emacs-lisp
@@ -14,8 +19,7 @@
   :commands fatebook-create-question)
 ```
 
-- Manual installation: copy `fatebook.el` to your load-path, then
-
+- Manual installation: copy `fatebook.el` to your load-path and then run `(require 'fatebook)`. For example:
 
 1. Clone the repository:
 
@@ -37,7 +41,6 @@ Replace `"/path/to/fatebook.el"` with the actual path to the directory.
 (require 'fatebook)
 `
 
-
 [Doom Emacs](https://github.com/hlissner/doom-emacs):
 
 Put this into packages.el
@@ -46,29 +49,6 @@ Put this into packages.el
   :recipe (:host github
            :repo "sonofhypnos/fatebook.el"))
 ```
-
-## Manual Installation
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/sonofhypnos/fatebook.el.git
-```
-
-2. Add the directory to your `load-path`. In your `.emacs` or `init.el`, add:
-
-```elisp
-(add-to-list 'load-path "/path/to/fatebook.el")
-```
-
-Replace `"/path/to/fatebook.el"` with the actual path to the directory.
-
-3. Load the package:
-
-```elisp
-(require 'fatebook)
-```
-
 
 ## Storing your api-keys
 
