@@ -91,7 +91,7 @@ For the longer explanation see this section I stole from [(ghub)Getting Started]
 
 > The default Auth-Source backends only support storing three values per entry; the "machine", the "login" and the "password".
 
-If you want fatebook.el to be able to find your api key use `fatebook.io` for machine and `defaultUser` for user.
+If you want fatebook.el to be able to find your api key use `fatebook.io` for machine, `defaultUser` for user and fatebooks api key for `password`.
 
 ## Configuration
 
