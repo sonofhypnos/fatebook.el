@@ -6,7 +6,7 @@
 ;; Maintainer: Tassilo Neubauer <tassilo.neubauer@gmail.com>
 ;; Created: September 07, 2023
 ;; Modified: September 11, 2023
-;; Version: 0.1.2
+;; Version: 0.1.3
 ;; Keywords: calendar comm convenience
 ;; Homepage: https://github.com/tassilo/fatebook
 ;; Package-Requires: ((emacs "25.1") (org "4.67"))
@@ -25,7 +25,6 @@
 ;;
 ;;; Commentary:
 ;;; TODO: add automated tests
-;;; TODO: figure out which version of 'request' we need.'
 ;;; TODO: Make fatebook fail more graciously when the user enters an invalid
 ;;; dates or predictions by asking for a new input.
 ;;; TODO: We could add more friendly error messages if api-call fails with http 500 and others.
@@ -33,7 +32,6 @@
 ;;;
 ;;; Code:
 
-(declare-function request "request")
 (declare-function org-read-date "org-read-date")
 
 (require 'calendar)
@@ -147,3 +145,6 @@ TITLE, RESOLVEBY, and FORECAST are required."
 
 (provide 'fatebook)
 ;;; fatebook.el ends here
+
+;;;
+;;;
