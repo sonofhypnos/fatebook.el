@@ -6,7 +6,7 @@
 ;; Maintainer: Tassilo Neubauer <tassilo.neubauer@gmail.com>
 ;; Created: September 07, 2023
 ;; Modified: September 11, 2023
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; Keywords: calendar comm convenience
 ;; Homepage: https://github.com/tassilo/fatebook
 ;; Package-Requires: ((emacs "25.1") (org "4.67"))
@@ -115,7 +115,7 @@ Optional arguments TITLE, RESOLVEBY, and FORECAST can be provided."
 
   (let ((secret (plist-get (car credentials) :secret)))
     (unless secret
-      (error "You must configure an API key. See https://github.com/new#user-content-storing-your-api-keys"))
+      (error "You must configure an API key. See https://github.com/sonofhypnos/fatebook.el#user-content-storing-your-api-keys"))
     secret)))
 
 
@@ -125,7 +125,7 @@ TITLE, RESOLVEBY, and FORECAST are required."
   (request
     "https://fatebook.io/api/v0/createQuestion"
     :params `(("apiKey" . ,(if fatebook-api-key-function
-                               (fatebook-api-key-function)
+                               (funcall fatebook-api-key-function)
                              (funcall (fatebook--api-key-fn))))
               ("title" . ,title)
               ("resolveBy" . ,resolveBy)
