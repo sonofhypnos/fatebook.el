@@ -40,7 +40,7 @@
 
 
 (defcustom fatebook-api-key-function nil
-  "Function to get the API key. If NIL, the default mechanism will be used."
+  "Function to get the API key. If NIL, fatebook--api-key-fn will be used."
   :type 'function
   :group 'fatebook)
 
@@ -98,7 +98,7 @@ Optional arguments TITLE, RESOLVEBY, and FORECAST can be provided."
     (fatebook--api-call title resolveBy forecast)))
 
 (defun fatebook--api-key-fn ()
-  "Retrieve the Fatebook API key. If not present, prompt the user and save it."
+  "Retrieve the Fatebook API key from `fatebook-auth-source-backend'."
 (let ((credentials (let ((auth-source-creation-prompts '((secret . "Enter API key for %h: "))))
   (auth-source-search :host "fatebook.io"
                       :user "defaultUser"
