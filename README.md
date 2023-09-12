@@ -56,6 +56,10 @@ Replace `"/path/to/fatebook.el"` with the actual path to the directory.
 
 
 ### TLDR: 
+You have an existing solution for secrets in Emacs: set `fatebook-api-key-function` in your configuration to your function to retrieve your secret.
+
+Otherwise:
+
 open `~/.authinfo.gpg` with emacs:
 
 ``` sh
