@@ -13,4 +13,7 @@
  (fatebook--api-call "test" "2050-01-100" 0.5)) ;;impossible date leads to 500 error
 (let ((fatebook-api-key-function nil)
       (fatebook-debug t))
+ (fatebook--api-call "test" "2050-02-30" 0.5)) ;;sets a date in march instead
+(let ((fatebook-api-key-function nil)
+      (fatebook-debug t))
  (fatebook--api-call "test" "2050-01-01" 0.5)) ;;should create regular question
