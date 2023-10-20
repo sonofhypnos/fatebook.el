@@ -1,6 +1,6 @@
 # fatebook.el
 
-fatebook.el is an Emacs plugin to create questions on Fatebook. Usage:
+fatebook.el is an Emacs plugin to create predictions from Emacs and saves them in [Fatebook](https://fatebook.io/). Usage:
 
 ![](assets/demo.gif)
 
