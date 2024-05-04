@@ -60,20 +60,40 @@ Options are ``'netrc`` or ``'secrets``."
   :type 'bool
   :group 'fatebook)
 
+(defcustom fatebook-add-tags t
+  "If non-nil set tags when creating new questions"
+  :type 'bool
+  :group 'fatebook)
+
+(defcustom fatebook-tags '()
+  "List of tags to give as options for the list option."
+  :type 'list
+  :group 'fatebook)
+
 (defun fatebook--pick-date ()
   "Open calendar and return the date selected by the user in 'YYYY-MM-DD' format."
   (if fatebook-use-org-read-date (progn (require 'org)
-                                         (org-read-date nil nil nil "Resolve by:"))
-        ;FIXME: a simple datepicker that doesn't require org would be nice, but
-        ;this turned out more complicated than expected.
-        ;I tried writing my own minor mode with it's own keymap, but this
-        ;introduced all kinds of complications like it turned out to be hard not to get
-        ;RET overwritten by evil. Fixing that without breaking the users keymap was hard.
-        ;I sort of expected there already to be a standard function that doesn't
-        ;use org to choose the date with the 3-month calendar.
+                                        (org-read-date nil nil nil "Resolve by:"))
+                                        ;FIXME: a simple datepicker that doesn't require org would be nice, but
+                                        ;this turned out more complicated than expected.
+                                        ;I tried writing my own minor mode with it's own keymap, but this
+                                        ;introduced all kinds of complications like it turned out to be hard not to get
+                                        ;RET overwritten by evil. Fixing that without breaking the users keymap was hard.
+                                        ;I sort of expected there already to be a standard function that doesn't
+                                        ;use org to choose the date with the 3-month calendar.
     (seq-let (month day year) (calendar-read-date)
       (calendar-exit)
       (format "%d-%02d-%02d" year month day))))
+
+(defun fatebook--tag-form ()
+  "Interactive form allowing selection from a list or custom input, and multiple tag entry."
+  (interactive)
+  (let ((tags ())  ;; Initialize the list of tags
+        tag)       ;; Temp variable to hold each input
+    ;; Loop to collect tags until an empty input is received
+    (while (not (string-empty-p (setq tag (completing-read "Set a tag (leave empty to finish): " fatebook-tags nil nil))))
+      (push tag tags))  ;; Add non-empty tags to the list
+    tags))
 
 (defun fatebook--valid-date-p (date)
   "Check if DATE has the format 'YYYY-MM-DD'.
@@ -88,46 +108,59 @@ Optional arguments TITLE, RESOLVEBY, and FORECAST can be provided."
   (let* ((title (or title (read-string "Question title: ")))
          (resolveBy (or resolveBy (fatebook--pick-date)))
          (forecast (or forecast
-                       (/ (read-number "Make a prediction 0-100 (%): ") 100.0))))
-
+                       (/ (read-number "Make a prediction 0-100 (%): ") 100.0)))
+         (tags      (if fatebook-add-tags
+                        (fatebook--tag-form)
+                      nil)))
     (unless (fatebook--valid-date-p resolveBy)
       (error "Invalid date format for 'resolveBy'. Expected format: YYYY-MM-DD"))
 
     (unless (and (>= forecast 0) (<= forecast 1))
       (error "Forecast value must be between 0 and 100. For 40%% write 40"))
-    (fatebook--api-call title resolveBy forecast)))
+    (fatebook--api-call title resolveBy forecast tags)))
+
+(defun fatebook--map-tags (tags)
+  "Convert a list of TAGS to a single string separated by '&'."
+  (mapcar (lambda (x) (cons "tags" x)) tags))
 
 (defun fatebook--api-key-fn ()
   "Retrieve the Fatebook API key from `fatebook-auth-source-backend'."
-(let ((credentials (let ((auth-source-creation-prompts '((secret . "Enter API key for %h: "))))
-  (auth-source-search :host "fatebook.io"
-                      :user "defaultUser"
-                      :type fatebook-auth-source-backend
-                      ;;:create ;NOTE: auth-source does not support deletion. A
-                      ;;convoluted idea that could work is that we
-                      ;;just add more and more api keys, and we version them
-                      ;;with the :user handle and then just try all of them if
-                      ;;none worka. Could lead to complaints from fatebook
-                      ;;though.
-                      :max 1))))
+  (let ((credentials (let ((auth-source-creation-prompts '((secret . "Enter API key for %h: "))))
+                       (auth-source-search :host "fatebook.io"
+                                           :user "defaultUser"
+                                           :type fatebook-auth-source-backend
+                                           ;;:create ;NOTE: auth-source does not support deletion. A
+                                           ;;convoluted idea that could work is that we
+                                           ;;just add more and more api keys, and we version them
+                                           ;;with the :user handle and then just try all of them if
+                                           ;;none worka. Could lead to complaints from fatebook
+                                           ;;though.
+                                           :max 1))))
+    (let ((secret (plist-get (car credentials) :secret)))
+      (unless secret
+        (error "You need to configure an API key for fatebook. See https://github.com/sonofhypnos/fatebook.el#user-content-storing-your-api-keys"))
+      secret)))
 
-  (let ((secret (plist-get (car credentials) :secret)))
-    (unless secret
-      (error "You need to configure an API key for fatebook. See https://github.com/sonofhypnos/fatebook.el#user-content-storing-your-api-keys"))
-    secret)))
+(defun fatebook--get-api-params (title resolveBy forecast &optional tags)
+  (setq params (list (cons "apiKey" (if fatebook-api-key-function
+                                        (funcall fatebook-api-key-function)
+                                      (funcall (fatebook--api-key-fn))))
+                     (cons "title" title)
+                     (cons "resolveBy" resolveBy)
+                     (cons "forecast" (number-to-string forecast))))
 
+  (if tags
+      (append params (fatebook--map-tags tags))
+    (if fatebook-add-tags
+        (append params (fatebook--map-tags (fatebook--tag-form)))
+      params)))
 
-(defun fatebook--api-call (title resolveBy forecast)
+(defun fatebook--api-call (title resolveBy forecast &optional tags)
   "API call to fatebook.
 TITLE, RESOLVEBY, and FORECAST are required."
   (request
     "https://fatebook.io/api/v0/createQuestion"
-    :params `(("apiKey" . ,(if fatebook-api-key-function
-                               (funcall fatebook-api-key-function)
-                             (funcall (fatebook--api-key-fn))))
-              ("title" . ,title)
-              ("resolveBy" . ,resolveBy)
-              ("forecast" . ,(number-to-string forecast)))
+    :params (fatebook--get-api-params title resolveBy forecast tags)
     :success (lambda (&rest response)
                (let ((data (plist-get response :data)))
                  (message "Question created successfully! Visit your question under %S" data)))
