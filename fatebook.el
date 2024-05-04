@@ -88,7 +88,7 @@ Optional arguments TITLE, RESOLVEBY, and FORECAST can be provided."
   (let* ((title (or title (read-string "Question title: ")))
          (resolveBy (or resolveBy (fatebook--pick-date)))
          (forecast (or forecast
-                       (/ (read-number "Make a prediction 0-100 (%): ") 100))))
+                       (/ (read-number "Make a prediction 0-100 (%): ") 100.0))))
 
     (unless (fatebook--valid-date-p resolveBy)
       (error "Invalid date format for 'resolveBy'. Expected format: YYYY-MM-DD"))
